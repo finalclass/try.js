@@ -6,19 +6,13 @@
 2 info using npm@1.3.2
 3 info using node@v0.10.13
 4 error Error: Git working directory not clean.
-4 error M README.md
-4 error M spec/it-can-catch.spec.js
-4 error M spec/it-is-async.spec.js
-4 error M spec/it-is-parallel.spec.js
-4 error M spec/it-is-sync.spec.js
-4 error M spec/it-works-greate-with-node.spec.js
+4 error M npm-debug.log
+4 error M package.json
 4 error     at c:\Program Files\nodejs\node_modules\npm\lib\version.js:97:35
 4 error     at ChildProcess.exithandler (child_process.js:635:7)
 4 error     at ChildProcess.EventEmitter.emit (events.js:98:17)
 4 error     at maybeClose (child_process.js:735:16)
-4 error     at Socket.<anonymous> (child_process.js:948:11)
-4 error     at Socket.EventEmitter.emit (events.js:95:17)
-4 error     at Pipe.close (net.js:466:12)
+4 error     at Process.ChildProcess._handle.onexit (child_process.js:802:5)
 5 error If you need help, you may report this log at:
 5 error     <http://github.com/isaacs/npm/issues>
 5 error or email it to:
