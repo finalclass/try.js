@@ -1,4 +1,4 @@
-describe('basic-use-cases', function () {
+describe('it-is-parallel.spec', function () {
 
     var Try = require('../Try.js'),
         fs = require('fs');

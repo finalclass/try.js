@@ -1,4 +1,4 @@
-describe('basic-use-cases', function () {
+describe('it-is-async.spec', function () {
 
     var Try = require('../Try.js');
 
