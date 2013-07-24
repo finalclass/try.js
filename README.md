@@ -11,7 +11,8 @@ npm install try
 ## usage
 
 ```js
-var Try = require('try');
+var Try = require('try'),
+    result = 0;
 
 new Try
     (function () {
@@ -27,7 +28,7 @@ new Try
         result = n;
     })();
 
-    expect(result).toBe(4);
+expect(result).toBe(4);
 ```
 
 ## more examples
