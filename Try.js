@@ -97,4 +97,6 @@ Try.fn = {
     }
 };
 
-module.exports = Try;
+if (module && module.exports) {
+    module.exports = Try;
+}

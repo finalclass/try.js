@@ -8,7 +8,7 @@ Examples are the best source of documentation - read spec/ directory content to 
 npm install try
 ```
 
-## async usage (increment file
+## async usage (read directory content)
 
 ```js
 
