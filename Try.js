@@ -17,16 +17,37 @@ function Try(func) {
     }
     r.stack = [];
     r.proceed = true;
+    r.pauseCounter = 0;
+    r.argsStack = [];
 
     return func ? r(func) : r;
 }
 
+Try.throwFirstArgument = function () {
+    return function () {
+        if (arguments[0]) {
+            throw arguments[0];
+        }
+        return arguments[1];
+    }
+};
+
+Try.throwFirstArgumentInArray = function () {
+    return function () {
+        return Array.prototype.map.call(arguments, function (args) {
+            if (args[0]) { throw args[0]; }
+            return args[1];
+        });
+    };
+};
+
 Try.fn = {
     pause: function (n) {
         var r = this;
-        n = n || 1;
 
-        if (n <= 0) {
+        r.pauseCounter += n || 1;
+
+        if (r.pauseCounter <= 0) {
             throw new TypeError('n must be greater then 0');
         }
 
@@ -35,11 +56,13 @@ Try.fn = {
         }
 
         r.proceed = false;
-        var args = [];
+
         return function resume() {
-            n -= 1;
+            var args = r.argsStack;
             args.push(arguments);
-            if (n === 0) {
+            r.pauseCounter -= 1;
+            if (r.pauseCounter === 0) {
+                r.argsStack = [];
                 r.proceed = true;
                 if (args.length === 1) {
                     return r.run(null, args[0]);

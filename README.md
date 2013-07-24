@@ -17,6 +17,7 @@ var Try = require('try'),
 
 new Try
     (function () {
+        //this.pause() method returns a "resume" callback and pauses current execution.
         fs.readdir('./spec', this.pause());
     })
     (function (err, files) {

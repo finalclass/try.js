@@ -18,7 +18,7 @@ describe('it-increment-file-content.spec', function () {
                     fs.readFile('./spec/' + file, next);
                 });
             })
-            (function () {
+            (function (err, data) {
                 return Array.prototype.map.call(arguments, function (args) {
                     return args[1].toString();
                 }).join('');
