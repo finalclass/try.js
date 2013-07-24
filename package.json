@@ -1,0 +1,17 @@
+{
+    "name": "try",
+    "version": "0.0.0",
+    "description": "Async try / catch",
+    "main": "Try.js",
+    "scripts": {
+        "test": "jasmine-node spec/"
+    },
+    "author": "Szymon Wygnański <s@finalclass.net>",
+    "license": "MIT",
+    "dependencies": {
+
+    },
+    "devDependencies": {
+        "jasmine-node": "~1.10.2"
+    }
+}
