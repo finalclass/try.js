@@ -1,21 +1,19 @@
 {
-    "name": "try",
-    "version": "0.0.0",
-    "description": "Async try / catch",
-    "main": "Try.js",
-    "scripts": {
-        "test": "jasmine-node spec/"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:finalclass/try.js.git"
-    },
-    "author": "Szymon Wygnański <s@finalclass.net>",
-    "license": "MIT",
-    "dependencies": {
-
-    },
-    "devDependencies": {
-        "jasmine-node": "~1.10.2"
-    }
+  "name": "try",
+  "version": "0.1.0",
+  "description": "Async try / catch",
+  "main": "Try.js",
+  "scripts": {
+    "test": "jasmine-node spec/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:finalclass/try.js.git"
+  },
+  "author": "Szymon Wygnański <s@finalclass.net>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-node": "~1.10.2"
+  }
 }
