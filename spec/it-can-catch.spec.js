@@ -5,15 +5,14 @@ describe('it-can-catch.spec', function () {
     it('can catch', function () {
         var cb = jasmine.createSpy('catch'),
             nextTry = jasmine.createSpy('nextTry'),
+            throwError = function () {throw new Error();},
             noop = jasmine.createSpy('noop');
 
         new Try
             (noop)
             (noop)
             (noop)
-            (function () {
-                throw new Error('Test');
-            })
+            (throwError)
             (nextTry)
         .catch(cb)
         .run();
