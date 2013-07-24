@@ -6,6 +6,10 @@
     "scripts": {
         "test": "jasmine-node spec/"
     },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:finalclass/try.js.git"
+    },
     "author": "Szymon Wygnański <s@finalclass.net>",
     "license": "MIT",
     "dependencies": {
