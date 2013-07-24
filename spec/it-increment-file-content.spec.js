@@ -15,7 +15,6 @@ describe('it-increment-file-content.spec', function () {
                 var next = this.pause(files.length);
 
                 files.forEach(function (file) {
-                    console.log('file', file);
                     fs.readFile('./spec/' + file, next);
                 });
             })
