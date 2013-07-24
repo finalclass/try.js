@@ -1,4 +1,4 @@
-describe('it-is-async.spec', function () {
+describe('it-can-be-async.spec', function () {
 
     var Try = require('../Try.js');
 

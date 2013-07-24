@@ -1,4 +1,4 @@
-describe('it-is-parallel.spec', function () {
+describe('it-can-be-parallel.spec', function () {
 
     var Try = require('../Try.js'),
         fs = require('fs');
