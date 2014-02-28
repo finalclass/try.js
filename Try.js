@@ -15,6 +15,7 @@ function Try(func) {
     for (var i in Try.fn) {
         r[i] = Try.fn[i];
     }
+    r.then = r;
     r.stack = [];
     r.proceed = true;
     r.pauseCounter = 0;
@@ -41,38 +42,41 @@ Try.throwFirstArgumentInArray = function () {
     };
 };
 
-Try.fn = {
-    pause: function (n) {
-        var r = this;
+Try.pause = function (n) {
+    var r = Try.currentTry;
 
-        r.pauseCounter += n || 1;
+    r.pauseCounter += n || 1;
 
-        if (r.pauseCounter <= 0) {
-            throw new TypeError('n must be greater then 0');
-        }
+    if (r.pauseCounter <= 0) {
+        throw new TypeError('n must be greater then 0');
+    }
 
-        if (r.stack.length === 0) {
-            return r;
-        }
+    if (r.stack.length === 0) {
+        return r;
+    }
 
-        r.proceed = false;
+    r.proceed = false;
 
-        return function resume() {
-            var args = r.argsStack;
-            args.push(arguments);
-            r.pauseCounter -= 1;
-            if (r.pauseCounter === 0) {
-                r.argsStack = [];
-                r.proceed = true;
-                if (args.length === 1) {
-                    return r.run(null, args[0]);
-                } else {
-                    return r.run(null, args);
-                }
+    return function resume() {
+        var args = r.argsStack;
+        args.push(arguments);
+        r.pauseCounter -= 1;
+        if (r.pauseCounter === 0) {
+            r.argsStack = [];
+            r.proceed = true;
+            if (args.length === 1) {
+                return r.run(null, args[0]);
+            } else {
+                return r.run(null, args);
             }
-            return r;
-        };
-    },
+        }
+        return r;
+    };
+}
+
+Try.currentTry = null;
+
+Try.fn = {
     catch: function (callback) {
         this.catchCallback = callback;
         return this;
@@ -96,7 +100,9 @@ Try.fn = {
 
         args = args || [this.lastResult];
 
+
         //run the function
+        Try.currentTry = this;
         try {
             this.lastResult = func.apply(this, args);
             if (this.stack.length === 0 && this.finallyCallback instanceof Function) {

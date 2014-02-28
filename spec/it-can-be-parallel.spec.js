@@ -14,13 +14,13 @@ describe('it-can-be-parallel.spec', function () {
 
         new Try
         (function () {
-            var next = this.pause(2);
+            var next = Try.pause(2);
             fs.writeFile('tmp.tmp', 'a', next);
             fs.writeFile('tmp2.tmp', 'b', next);
         })
             (eat2Errors)
         (function () {
-            var next = this.pause(2);
+            var next = Try.pause(2);
             fs.readFile('tmp.tmp', next);
             fs.readFile('tmp2.tmp', next);
         })
@@ -37,7 +37,7 @@ describe('it-can-be-parallel.spec', function () {
                 console.log(err.stack);
             })
             .finally(function () {
-                var next = this.pause(2);
+                var next = Try.pause(2);
                 fs.unlink('tmp.tmp', next);
                 fs.unlink('tmp2.tmp', next);
             })

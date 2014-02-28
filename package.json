@@ -10,10 +10,21 @@
     "type": "git",
     "url": "git@github.com:finalclass/try.js.git"
   },
-  "author": "Szymon Wygnański <s@finalclass.net>",
+  "author": {
+    "name": "Szymon Wygnański",
+    "email": "s@finalclass.net"
+  },
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "jasmine-node": "~1.10.2"
-  }
+  },
+  "readme": "# Try.js\r\n\r\nExamples are the best source of documentation - read spec/ directory content to find some of those.\r\n\r\n## install\r\n\r\n```bash\r\nnpm install try\r\n```\r\n\r\n## async usage (read directory content)\r\n\r\n```js\r\n\r\nvar Try = require('try'),\r\n    fs = require('fs');\r\n\r\nnew Try\r\n    (function () {\r\n        //this.pause() method returns a \"resume\" callback and pauses current execution.\r\n        fs.readdir('./spec', this.pause());\r\n    })\r\n    (function (err, files) {\r\n        if (err) { throw err; }\r\n        var next = this.pause(files.length);\r\n\r\n        files.forEach(function (file) {\r\n            console.log('file', file);\r\n            fs.readFile('./spec/' + file, next);\r\n        });\r\n    })\r\n    (function () {\r\n        return Array.prototype.map.call(arguments, function (args) {\r\n            return args[1].toString();\r\n        }).join('');\r\n    })\r\n    (function (result) {\r\n        dirContent = result;\r\n    })\r\n    .catch(function (err) {\r\n        console.log('catch', err.stack);\r\n    })\r\n    .run();\r\n```\r\n\r\n## sync usage\r\n\r\n```js\r\nvar Try = require('try'),\r\n    result = 0;\r\n\r\nnew Try\r\n    (function () {\r\n        return 1;\r\n    })\r\n    (function (n) {\r\n        return n + 1;\r\n    })\r\n    (function (n) {\r\n        return n * 2;\r\n    })\r\n    (function (n) {\r\n        result = n;\r\n    })();\r\n\r\nexpect(result).toBe(4);\r\n```\r\n\r\n## more examples\r\n\r\nFor more examples check out the spec/ directory",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/finalclass/try.js/issues"
+  },
+  "homepage": "https://github.com/finalclass/try.js",
+  "_id": "try@0.4.0",
+  "_from": "try@"
 }

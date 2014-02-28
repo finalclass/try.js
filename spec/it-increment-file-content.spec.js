@@ -8,14 +8,14 @@ describe('it-increment-file-content.spec', function () {
 
         new Try
             (function () {
-                fs.readdir('./spec', this.pause());
+                fs.readdir(__dirname, Try.pause());
             })
             (function (err, files) {
                 if (err) { throw err; }
-                var next = this.pause(files.length);
+                var next = Try.pause(files.length);
 
                 files.forEach(function (file) {
-                    fs.readFile('./spec/' + file, next);
+                    fs.readFile(__dirname + '/' + file, next);
                 });
             })
             (function (err, data) {

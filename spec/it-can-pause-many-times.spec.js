@@ -7,12 +7,12 @@ describe('it-can-pause-many-times', function () {
 
         new Try
             (function () {
-                fs.readdir('./spec', this.pause());
+                fs.readdir(__dirname, Try.pause());
             })
             (Try.throwFirstArgument())
             (function (files) {
                 for (var i = files.length; i -= 1;) {
-                    fs.readFile('./spec/' + files[i], this.pause());
+                    fs.readFile(__dirname + '/' + files[i], Try.pause());
                 }
             })
             (Try.throwFirstArgumentInArray())

@@ -8,15 +8,15 @@ describe('it-can-be-async.spec', function () {
         new Try
         (function () {
             result += 1;
-            setTimeout(this.pause(), 1);
+            setTimeout(Try.pause(), 1);
         })
         (function () {
             result += 1;
-            setTimeout(this.pause(), 1);
+            setTimeout(Try.pause(), 1);
         })
         (function () {
             result += 1;
-            setTimeout(this.pause(), 1);
+            setTimeout(Try.pause(), 1);
         })();
 
         waitsFor(function () {

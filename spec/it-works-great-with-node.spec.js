@@ -13,16 +13,16 @@ describe('it-works-great-with-node.spec', function () {
 
         new Try
             (function () {
-                fs.writeFile('tmp.tmp', 'Test', this.pause());
+                fs.writeFile('tmp.tmp', 'Test', Try.pause());
             })
             (eatError)
             (function () {
-                fs.exists('tmp.tmp', this.pause());
+                fs.exists('tmp.tmp', Try.pause());
             })
             (function (exists) {
                 fExists = exists;
                 if (exists) {
-                    fs.readFile('tmp.tmp', this.pause());
+                    fs.readFile('tmp.tmp', Try.pause());
                 } else {
                     throw new Error('File does not exists');
                 }
@@ -35,7 +35,7 @@ describe('it-works-great-with-node.spec', function () {
                 console.log(err.stack);
             })
             .finally(function () {
-                fs.unlink('tmp.tmp', this.pause());
+                fs.unlink('tmp.tmp', Try.pause());
             })
             .run();
 

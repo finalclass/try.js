@@ -12,12 +12,32 @@ describe('basic-use-case', function () {
             })();
     });
 
+    it('has then function just like Promise/A+ does', function () {
+        new Try(function () {
+            return 'test';
+        })
+        .then(function (lastReturn) {
+            expect(lastReturn).toBe('test');
+        })
+        .run();
+    });
+
+    it('does not need new operator', function () {
+        Try(function () {
+            return 'test';
+        })
+        .then(function (lastReturn) {
+            expect(lastReturn).toBe('test');
+        })
+        .run();
+    });
+
     it('can pass arguments async', function () {
         var result = '';
 
         new Try
             (function () {
-                var resume = this.pause();
+                var resume = Try.pause();
                 setTimeout(function () {
                     resume('test');
                 });
