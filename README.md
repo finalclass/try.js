@@ -17,12 +17,12 @@ var Try = require('try'),
 
 new Try
     (function () {
-        //this.pause() method returns a "resume" callback and pauses current execution.
-        fs.readdir('./spec', this.pause());
+        //Try.pause() method returns a "resume" callback and pauses current execution.
+        fs.readdir('./spec', Try.pause());
     })
     (function (err, files) {
         if (err) { throw err; }
-        var next = this.pause(files.length);
+        var next = Try.pause(files.length);
 
         files.forEach(function (file) {
             console.log('file', file);
