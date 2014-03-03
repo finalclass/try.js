@@ -4,7 +4,7 @@ function Try(func) {
             return r.run();
         }
 
-        if (func instanceof Function) {
+        if (typeof func === 'function') {
             r.stack.push(func);
         }
 
