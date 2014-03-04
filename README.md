@@ -1,6 +1,6 @@
 # Try.js
 
-Examples are the best source of documentation - read spec/ directory content to find some of those.
+Examples are the best source of documentation - read spec/ directory content to find more of them.
 
 ## install
 
@@ -39,8 +39,7 @@ new Try
     })
     .catch(function (err) {
         console.log('catch', err.stack);
-    })
-    .run();
+    });
 ```
 
 ## sync usage
@@ -61,7 +60,7 @@ new Try
     })
     (function (n) {
         result = n;
-    })();
+    });
 
 expect(result).toBe(4);
 ```

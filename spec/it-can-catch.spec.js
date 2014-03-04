@@ -9,12 +9,12 @@ describe('it-can-catch.spec', function () {
     var noop = jasmine.createSpy('noop');
 
     new Try
-      (noop)
-      (noop)
-      (noop)
-      (throwError)
-      (nextTry)
-      .catch(cb);
+    (noop)
+    (noop)
+    (noop)
+    (throwError)
+    (nextTry)
+    .catch(cb);
       
     expect(nextTry).not.toHaveBeenCalled();
     expect(cb).toHaveBeenCalled();
