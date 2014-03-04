@@ -1,131 +1,134 @@
 function Try(func) {
-    var r = function (func) {
-        if (arguments.length === 0 && r.proceed && r.stack.length > 0) {
-            return r.run();
-        }
-
-        if (typeof func === 'function') {
-            r.stack.push(func);
-        }
-
-        return r;
-    };
-
-    //Copy methods
-    for (var i in Try.fn) {
-        r[i] = Try.fn[i];
+  var r = function (func) {
+    if (typeof func === 'function') {
+      r.stack.push(func);
     }
-    r.then = r;
-    r.stack = [];
-    r.proceed = true;
-    r.pauseCounter = 0;
-    r.argsStack = [];
+    return r.run();
+  };
 
-    return func ? r(func) : r;
+  //Copy methods
+  for (var i in Try.fn) {
+    r[i] = Try.fn[i];
+  }
+  r.stack = [];
+  r.proceed = true;
+  r.pauseCounter = 0;
+  r.argsStack = [];
+
+  return r(func);
 }
 
 Try.throwFirstArgument = function () {
-    return function () {
-        if (arguments[0]) {
-            throw arguments[0];
-        }
-        return arguments[1];
-    }
+  if (arguments[0]) {
+    throw arguments[0];
+  }
+  return arguments[1];
 };
 
 Try.throwFirstArgumentInArray = function () {
-    return function () {
-        return Array.prototype.map.call(arguments, function (args) {
-            if (args[0]) { throw args[0]; }
-            return args[1];
-        });
-    };
+  return Array.prototype.map.call(arguments, function (args) {
+      if (args[0]) { throw args[0]; }
+      return args[1];
+  });
 };
 
 Try.pause = function (n) {
-    var r = Try.currentTry;
+  var r = Try.currentTry;
 
-    r.pauseCounter += n || 1;
+  r.pauseCounter += n || 1;
 
-    if (r.pauseCounter <= 0) {
-        throw new TypeError('n must be greater then 0');
+  if (r.pauseCounter <= 0) {
+    throw new TypeError('n must be greater then 0');
+  }
+
+  r.proceed = false;
+
+  return function resume() {
+    var args = r.argsStack;
+    args.push(arguments);
+    r.pauseCounter -= 1;
+    if (r.pauseCounter === 0) {
+      r.argsStack = [];
+      r.proceed = true;
+      if (args.length === 1) {
+        return r.run(args[0]);
+      } else {
+        return r.run(args);
+      }
     }
-
-    if (r.stack.length === 0) {
-        return r;
-    }
-
-    r.proceed = false;
-
-    return function resume() {
-        var args = r.argsStack;
-        args.push(arguments);
-        r.pauseCounter -= 1;
-        if (r.pauseCounter === 0) {
-            r.argsStack = [];
-            r.proceed = true;
-            if (args.length === 1) {
-                return r.run(null, args[0]);
-            } else {
-                return r.run(null, args);
-            }
-        }
-        return r;
-    };
+    return r;
+  };
 }
 
 Try.currentTry = null;
 
 Try.fn = {
-    catch: function (callback) {
-        this.catchCallback = callback;
-        return this;
-    },
-    finally: function (callback) {
-        this.finallyCallback = callback;
-        return this;
-    },
-    /**
-     * Zdejmuje ze stosu jeśli nie podano argujmentu func, inaczej uruchamia funkcję i
-     * zmienia r.lastResult
-     *
-     * @param {function} func
-     */
-    run: function (func, args) {
-        //read arguments
-        func = func || this.stack.shift();
-        if (!func) {
-            return this;
-        }
-
-        args = args || [this.lastResult];
-
-
-        //run the function
-        Try.currentTry = this;
-        try {
-            this.lastResult = func.apply(this, args);
-            if (this.stack.length === 0 && this.finallyCallback instanceof Function) {
-                this.finallyCallback(this.lastResult);
-            } else {
-                return this.proceed ? this.run() : this;
-            }
-        } catch (e) {
-            if (this.catchCallback instanceof Function) {
-                this.catchCallback(e);
-            }
-            if (this.finallyCallback instanceof Function) {
-                this.finallyCallback(this.lastResult);
-            }
-
-            if (!(this.catchCallback instanceof Function) && !(this.finallyCallback instanceof Function)) {
-                throw e;
-            }
-        }
-        return this;
+  callCatchCallbackIfPossible: function () {
+    var err = this.error;
+    if (err && this.catchCallback) {
+      this.error = null;
+      this.catchCallback.call(this, err);
+      this.catchCallback = null;
     }
+  },
+  callFinallyCallbackIfPossible: function () {
+    if (this.finallyCallback) {
+      var err = this.error;
+      this.error = null;
+      this.finallyCallback.call(this, err);
+      this.finallyCallback = null;
+    }
+  },
+  throwErrorLater: function () {
+    var that = this;
+    setTimeout(function () {
+      if (that.error) {
+        throw that.error;
+      }
+    });
+  },
+  catch: function (callback) {
+    this.catchCallback = callback;
+    return this.run();
+  },
+  finally: function (callback) {
+    this.finallyCallback = callback;
+    return this.run();
+  },
+  run: function (args) {
+    this.callCatchCallbackIfPossible();
+
+    if (!this.proceed || (this.stack.length === 0 && !this.finallyCallback)) {
+      return this;
+    }
+
+    func = this.stack.shift();
+    args = args || [this.lastResult];
+    Try.currentTry = this;
+
+    if (!func) {
+      this.callFinallyCallbackIfPossible();
+      return this.run();
+    }
+
+    if (this.error) { //if there was an error, abandon current `func` and go further (wait for catch)
+      return this;
+    }
+
+    //run the function
+    try {
+      this.lastResult = func.apply(this, args);
+    } catch (e) {
+      this.error = e;
+      this.throwErrorLater();
+    }
+
+    return this.run();
+  }
 };
 
+
+//nodejs support
 if (module && module.exports) {
-    module.exports = Try;
+  module.exports = Try;
 }

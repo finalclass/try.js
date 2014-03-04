@@ -9,27 +9,16 @@ describe('basic-use-case', function () {
             })
             (function (lastReturn) {
                 expect(lastReturn).toBe('test');
-            })();
-    });
-
-    it('has then function just like Promise/A+ does', function () {
-        new Try(function () {
-            return 'test';
-        })
-        .then(function (lastReturn) {
-            expect(lastReturn).toBe('test');
-        })
-        .run();
+            });
     });
 
     it('does not need new operator', function () {
         Try(function () {
             return 'test';
         })
-        .then(function (lastReturn) {
+        (function (lastReturn) {
             expect(lastReturn).toBe('test');
         })
-        .run();
     });
 
     it('can pass arguments async', function () {
@@ -45,7 +34,7 @@ describe('basic-use-case', function () {
             })
             (function (lastReturn) {
                 result = lastReturn;
-            })();
+            });
 
         waitsFor(function () {
             return result !== '';

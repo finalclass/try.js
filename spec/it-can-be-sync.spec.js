@@ -1,4 +1,4 @@
-describe('it-can-be-is-sync.spec', function () {
+describe('it-can-be-sync.spec', function () {
 
     var Try = require('../Try.js');
 
@@ -17,7 +17,7 @@ describe('it-can-be-is-sync.spec', function () {
         })
         (function (n) {
             result = n;
-        })();
+        });
 
         expect(result).toBe(4);
     });

@@ -17,7 +17,7 @@ describe('it-can-be-async.spec', function () {
         (function () {
             result += 1;
             setTimeout(Try.pause(), 1);
-        })();
+        });
 
         waitsFor(function () {
             return result === 3;
