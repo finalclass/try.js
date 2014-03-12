@@ -1,4 +1,5 @@
 describe('multiplie tries', function () {
+  var fs = require('fs');
   var Try = require('../Try.js');
 
   it('can merge tries sync', function (next) {
@@ -37,5 +38,34 @@ describe('multiplie tries', function () {
      next();
    });
  });
+
+  it('can merge by return statement', function (next) {
+    Try(function () {
+      return Try(function () {
+        var resume = Try.pause();
+        setTimeout(function () {
+          resume('works');
+        });
+      });
+    })(function (works) {
+      expect(works).toBe('works');
+      next();
+    });
+  });
+
+  it('can merge by return in real life situation', function (next) {
+    Try(function () {
+      return Try(function () {
+        fs.writeFile('tmp.tmp', 'ABC', Try.pause());
+      })(function () {
+        fs.unlink('tmp.tmp', Try.pause());
+      })
+    })(function () {
+      fs.exists('tmp.tmp', Try.pause());
+    })(function (doesExists) {
+      expect(doesExists === false).toBeTruthy();
+      next();
+    });
+  })
 
 });

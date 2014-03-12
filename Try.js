@@ -56,6 +56,9 @@ Try.fn = {
       var last = func.apply(this, this.argsStack.length === 1 ? this.argsStack[0] : this.argsStack);
       if (this.pauseCounter > 0 && last !== undefined) {
         this.argsStack.push(last);
+      } else if (typeof last === 'function' && last.stack) {
+        Try.currentTry = this;
+        last(Try.pause());
       } else {
         this.argsStack = last ? [[last]] : [];
       }
