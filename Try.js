@@ -1,4 +1,3 @@
-var index = 0;
 function Try(func) {
   var r = function (func) {
     r.stack.push(func);
@@ -8,9 +7,7 @@ function Try(func) {
   for (var i in Try.fn) { 
     r[i] = Try.fn[i];
   }
-  r.index = index++;
   r.stack = [];
-  r.proceed = true;
   r.pauseCounter = 0;
   r.argsStack = [];
 
@@ -37,35 +34,31 @@ Try.currentTry = null; //is being set in run function
 
 Try.pause = function (n) {
   var r = Try.currentTry;
-
   r.pauseCounter += n || 1;
-  if (r.pauseCounter <= 0) {
-    throw new TypeError('n must be greater then 0');
-  }
-
-  r.proceed = false;
   return function resume() {
-    var args = r.argsStack;
-    args.push(arguments);
-
-    r.pauseCounter -= 1;
-    if (r.pauseCounter === 0) {
-      r.argsStack = [];
-      r.proceed = true;
-      r.lastResult = args.length === 1 ? args[0] : args;
-      r.run();
-    }
+    var args = arguments;
+    setTimeout(function () {
+      r.pauseCounter -= 1;
+      r.argsStack.push(args);
+      if (r.pauseCounter === 0) {
+        r.run();
+      }
+    });
     return arguments[0];
   };
 }
 
 Try.fn = {
-  runFunc: function (func, args) {
+  runFunc: function (func) {
     try {
       var tryBefore = Try.currentTry;
       Try.currentTry = this;
-      var l = func.apply(this, args);
-      this.lastResult = l ? [l] : this.lastResult;
+      var last = func.apply(this, this.argsStack.length === 1 ? this.argsStack[0] : this.argsStack);
+      if (this.pauseCounter > 0 && last !== undefined) {
+        this.argsStack.push(last);
+      } else {
+        this.argsStack = last ? [[last]] : [];
+      }
       Try.currentTry = tryBefore;
     } catch (e) {
       this.error = e;
@@ -106,11 +99,12 @@ Try.fn = {
   },
   run: function () {
     this.callCatchCallbackIfPossible();
-    if (!this.proceed || (this.stack.length === 0 && !this.finallyCallback)) {
+
+    if (this.pauseCounter > 0 || (this.stack.length === 0 && !this.finallyCallback)) {
       return this;
     }
-
-    func = this.stack.shift();
+    
+    var func = this.stack.shift();
 
     if (!func) {
       this.callFinallyCallbackIfPossible();
@@ -120,8 +114,7 @@ Try.fn = {
     if (this.error) { //if there was an error, abandon current `func` and go further (wait for catch)
       return this;
     }
-    this.runFunc(func, this.lastResult);
-
+    this.runFunc(func);
     return this.run();
   }
 };

@@ -21,27 +21,18 @@ describe('basic-use-case', function () {
     })
   });
 
-  it('can pass arguments async', function () {
-    var result = '';
-
-    new Try
+  it('can pass arguments async', function (next) {
+    Try
     (function () {
       var resume = Try.pause();
       setTimeout(function () {
-        resume('test');
+        resume('works'); //pass argument to the next function
       });
-                //pass argument to the next function
-              })
-    (function (lastReturn) {
-      result = lastReturn;
-    });
-
-    waitsFor(function () {
-      return result !== '';
-    }, 'finish the timeout', 20);
-
-    runs(function () {
-      expect(result).toBe('test');
+    })
+    (function (works) {
+      expect(works).toBe('works');
+      next();
     });
   });
+
 });
