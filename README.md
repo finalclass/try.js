@@ -12,8 +12,8 @@ npm install try
 
 ```js
 
-var Try = require('try'),
-    fs = require('fs');
+var Try = require('try')
+var fs = require('fs');
 
 new Try
     (function () {

@@ -20,7 +20,7 @@ describe('it-can-pause-many-times', function () {
       fileContents = fileContentsArray.join('');
     })
     .catch(function (err) {
-      console.log(err.stack);
+      console.log(err, err.stack);
     });
 
     waitsFor(function () {
