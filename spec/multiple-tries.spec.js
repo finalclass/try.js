@@ -59,13 +59,13 @@ describe('multiplie tries', function () {
         fs.writeFile('tmp.tmp', 'ABC', Try.pause());
       })(function () {
         fs.unlink('tmp.tmp', Try.pause());
-      })
+      });
     })(function () {
       fs.exists('tmp.tmp', Try.pause());
     })(function (doesExists) {
       expect(doesExists === false).toBeTruthy();
       next();
     });
-  })
+  });
 
 });

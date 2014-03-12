@@ -54,6 +54,7 @@ Try.fn = {
       var tryBefore = Try.currentTry;
       Try.currentTry = this;
       var last = func.apply(this, this.argsStack.length === 1 ? this.argsStack[0] : this.argsStack);
+
       if (this.pauseCounter > 0 && last !== undefined) {
         this.argsStack.push(last);
       } else if (typeof last === 'function' && last.stack) {
@@ -62,6 +63,7 @@ Try.fn = {
       } else {
         this.argsStack = last ? [[last]] : [];
       }
+      
       Try.currentTry = tryBefore;
     } catch (e) {
       this.error = e;
@@ -108,7 +110,6 @@ Try.fn = {
     }
     
     var func = this.stack.shift();
-
     if (!func) {
       this.callFinallyCallbackIfPossible();
       return this.run();
@@ -117,6 +118,7 @@ Try.fn = {
     if (this.error) { //if there was an error, abandon current `func` and go further (wait for catch)
       return this;
     }
+
     this.runFunc(func);
     return this.run();
   }
