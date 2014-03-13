@@ -20,7 +20,7 @@ new Try
         //Try.pause() method returns a "resume" callback and pauses current execution.
         fs.readdir('./spec', Try.pause());
     })
-    (Try.extractArguments(function (err, files) {
+    (function (err, files) {
         if (err) { throw err; }
         var next = Try.pause(files.length);
 
@@ -28,15 +28,13 @@ new Try
             console.log('file', file);
             fs.readFile('./spec/' + file, next);
         });
-    }))
-    (function () {
-        return Array.prototype.map.call(arguments, function (args) {
-            return args[1].toString();
-        }).join('');
     })
-    (Try.extractAeguments(function (result) {
+    ([Try.throwFirstArgumentInArray, function () {
+        return Array.prototype.join.call(arguments, '');
+    }])
+    (function (result) {
         dirContent = result;
-    }))
+    })
     .catch(function (err) {
         console.log('catch', err.stack);
     });
@@ -52,15 +50,15 @@ new Try
     (function () {
         return 1;
     })
-    (Try.extractArguments(function (n) {
+    (function (n) {
         return n + 1;
-    }))
-    (Try.extractArguments(function (n) {
+    })
+    (function (n) {
         return n * 2;
-    }))
-    (Try.extractArguments(function (n) {
+    })
+    (function (n) {
         result = n;
-    }));
+    });
 
 expect(result).toBe(4);
 ```

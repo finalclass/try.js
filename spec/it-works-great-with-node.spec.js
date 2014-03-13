@@ -8,25 +8,27 @@ describe('it-works-great-with-node.spec', function () {
     (function () {
       fs.writeFile('tmp.tmp', 'Test', Try.pause());
     })
-    (Try.throwFirstArgument(function () {
+    (Try.throwFirstArgument)
+    (function () {
       fs.exists('tmp.tmp', Try.pause());
-    }))
-    (Try.extractArguments(function (exists) {
+    })
+    (function (exists) {
       expect(exists).toBeTruthy();
       fs.readFile('tmp.tmp', Try.pause());
-    }))
-    (Try.throwFirstArgument(function (file) {
+    })
+    (Try.throwFirstArgument)
+    (function (file) {
       expect(file.toString()).toBe('Test');
-    }))
+    })
     .finally(function (err) {
       fs.unlink('tmp.tmp', Try.pause());
       if (err) {
         next(err);
       }
     })
-    (Try.extractArguments(function (err) {
+    (function (err) {
       next(err);
-    }));
+    });
   });
 
 });

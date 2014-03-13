@@ -9,20 +9,19 @@ describe('it-increment-file-content.spec', function () {
     (function () {
       fs.readdir(__dirname, Try.pause());
     })
-    (Try.throwFirstArgument(function (files) {
+    (Try.throwFirstArgument)
+    (function (files) {
       var next = Try.pause(files.length);
       files.forEach(function (file) {
         fs.readFile(__dirname + '/' + file, next);
       });
-    }))
-    (function (err, data) {
-      return Array.prototype.map.call(arguments, function (args) {
-        return args[1].toString();
-      }).join('');
     })
-    (Try.extractArguments(function (result) {
+    ([Try.throwFirstArgumentInArray, function () {
+      return Array.prototype.join.call(arguments, '');
+    }])
+    (function (result) {
       expect(result !== '').toBeTruthy();
-    }))
+    })
     .finally(next);
 
   });

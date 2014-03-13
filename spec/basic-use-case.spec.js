@@ -8,7 +8,7 @@ describe('basic-use-case', function () {
       return 'test';
     })
     (function (result) {
-      expect(result[0]).toBe('test');
+      expect(result).toBe('test');
     });
   });
 
@@ -17,7 +17,7 @@ describe('basic-use-case', function () {
       return 'test';
     })
     (function (result) {
-      expect(result[0]).toBe('test');
+      expect(result).toBe('test');
     })
   });
 
@@ -30,7 +30,7 @@ describe('basic-use-case', function () {
       });
     })
     (function (result) {
-      expect(result[0]).toBe('works');
+      expect(result).toBe('works');
       next();
     });
   });

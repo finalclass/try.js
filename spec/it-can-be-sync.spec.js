@@ -9,15 +9,15 @@ describe('it-can-be-sync.spec', function () {
     (function () {
       return 1;
     })
-    (Try.extractArguments(function (n) {
+    (function (n) {
       return n + 1;
-    }))
-    (Try.extractArguments(function (n) {
+    })
+    (function (n) {
       return n * 2;
-    }))
-    (Try.extractArguments(function (n) {
+    })
+    (function (n) {
       result = n;
-    }));
+    });
 
     expect(result).toBe(4);
   });

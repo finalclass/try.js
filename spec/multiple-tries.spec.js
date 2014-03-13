@@ -8,11 +8,11 @@ describe('multiplie tries', function () {
       Try(function () {
         return 'works';
       })
-      (Try.extractArguments(Try.pause()));
+      (Try.pause());
     })
-    (Try.extractArguments(function (works) {
+    (function (works) {
       expect(works).toBe('works');
-    }))
+    })
     (function () {
       next();
     })
@@ -29,11 +29,11 @@ describe('multiplie tries', function () {
          resume('works');
        }, 200);
      })
-     (Try.extractArguments(Try.pause()));
+     (Try.pause());
    })
-   (Try.extractArguments(function (works) {
+   (function (works) {
     expect(works).toBe('works');
-   }))
+   })
    (function () {
      next();
    });
@@ -49,10 +49,10 @@ describe('multiplie tries', function () {
         });
       });
     })
-    (Try.extractArguments(function (works) {
+    (function (works) {
       expect(works).toBe('works');
       next();
-    }));
+    });
   });
 
   it('can merge by return in real life situation', function (next) {
@@ -69,10 +69,10 @@ describe('multiplie tries', function () {
     (function () {
       fs.exists('tmp.tmp', Try.pause());
     })
-    (Try.extractArguments(function (doesExists) {
+    (function (doesExists) {
       expect(doesExists === false).toBeTruthy();
       next();
-    }));
+    });
   });
 
 });

@@ -16,29 +16,19 @@ function Try(func) {
 }
 
 Try.throwFirstArgument = function (callback) {
-  return function () {
-    if (arguments[0][0]) {
-      throw arguments[0][0];
-    }
-    return callback.apply(null, Array.prototype.slice.call(arguments[0], 1));
+  if (arguments[0]) {
+    throw arguments[0];
   }
+  return arguments[1];
 };
 
 Try.throwFirstArgumentInArray = function (callback) {
-  return function () {
-    return callback.apply(null, Array.prototype.map.call(arguments, function (args) {
-      if (args[0]) {
-        throw args[0];
-      }
-      return args.slice(1);
-    }));
-  }
-};
-
-Try.extractArguments = function (callback) {
-  return function () {
-    return callback.apply(this, arguments[0]);
-  };
+  return Array.prototype.map.call(arguments, function (args) {
+    if (args[0]) {
+      throw args[0];
+    }
+    return args.slice(1);
+  });
 };
 
 Try.currentTry = null; //is being set in run function
@@ -60,17 +50,25 @@ Try.pause = function (n) {
 }
 
 Try.fn = {
-  runFunc: function (func) {
+  runFunc: function (funcDescription) {
     try {
       var tryBefore = Try.currentTry;
+      var last;
       Try.currentTry = this;
-      var last = func.apply(this, this.argsStack);
+      if (typeof funcDescription === 'function') {
+        last = funcDescription.apply(this, this.argsStack[0]);
+      } else {
+        last = this.argsStack;
+        for (var i = 0; i < funcDescription.length; i += 1) {
+          last = funcDescription[i].apply(this, last);
+        }
+      }
 
       if (this.pauseCounter > 0 && last !== undefined) {
         this.argsStack.push(last);
       } else if (typeof last === 'function' && last.stack) {
         Try.currentTry = this;
-        last(Try.extractArguments(Try.pause()));
+        last(Try.pause());
       } else {
         this.argsStack = last ? [[last]] : [];
       }
@@ -85,8 +83,8 @@ Try.fn = {
     var err = this.error;
     if (err && this.catchCallback) {
       this.error = null;
-      this.argsStack = [err];
-      this.runFunc(this.catchCallback, [err]);
+      this.argsStack = [[err]];
+      this.runFunc(this.catchCallback);
       this.catchCallback = null;
     }
   },
@@ -94,7 +92,7 @@ Try.fn = {
     if (this.finallyCallback) {
       var err = this.error;
       this.error = null;
-      this.argsStack = [err];
+      this.argsStack = [[err]];
       this.runFunc(this.finallyCallback);
       this.finallyCallback = null;
     }

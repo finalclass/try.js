@@ -10,16 +10,16 @@ describe('it-can-be-parallel.spec', function () {
       fs.writeFile('tmp.tmp', 'a', Try.pause());
       fs.writeFile('tmp2.tmp', 'b', Try.pause());
     })
-    (Try.throwFirstArgumentInArray(function (write1, write2) {
+    ([Try.throwFirstArgumentInArray, function (write1, write2) {
       fs.readFile('tmp.tmp', Try.pause());
       fs.readFile('tmp2.tmp', Try.pause());
-    }))
-    (Try.throwFirstArgumentInArray(function (read1, read2) {
+    }])
+    ([Try.throwFirstArgumentInArray, function (read1, read2) {
       return read1 + read2;
-    }))
-    (Try.extractArguments(function (concatenation) {
+    }])
+    (function (concatenation) {
       expect(concatenation === 'ab' || concatenation === 'ba').toBeTruthy();
-    }))
+    })
     .catch(function (e) {
       console.log('ERROR', e, e.stack);
       next(e);
