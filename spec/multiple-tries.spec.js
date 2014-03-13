@@ -8,11 +8,11 @@ describe('multiplie tries', function () {
       Try(function () {
         return 'works';
       })
-      (Try.pause());
+      (Try.extractArguments(Try.pause()));
     })
-    (function (works) {
+    (Try.extractArguments(function (works) {
       expect(works).toBe('works');
-    })
+    }))
     (function () {
       next();
     })
@@ -29,43 +29,50 @@ describe('multiplie tries', function () {
          resume('works');
        }, 200);
      })
-     (Try.pause());
+     (Try.extractArguments(Try.pause()));
    })
-   (function (works) {
+   (Try.extractArguments(function (works) {
     expect(works).toBe('works');
-   })
+   }))
    (function () {
      next();
    });
  });
 
   it('can merge by return statement', function (next) {
-    Try(function () {
+    Try
+    (function () {
       return Try(function () {
         var resume = Try.pause();
         setTimeout(function () {
           resume('works');
         });
       });
-    })(function (works) {
+    })
+    (Try.extractArguments(function (works) {
       expect(works).toBe('works');
       next();
-    });
+    }));
   });
 
   it('can merge by return in real life situation', function (next) {
-    Try(function () {
-      return Try(function () {
+    Try
+    (function () {
+      return Try
+      (function () {
         fs.writeFile('tmp.tmp', 'ABC', Try.pause());
-      })(function () {
+      })
+      (function () {
         fs.unlink('tmp.tmp', Try.pause());
       });
-    })(function () {
+    })
+    (function () {
       fs.exists('tmp.tmp', Try.pause());
-    })(function (doesExists) {
+    })
+    (Try.extractArguments(function (doesExists) {
       expect(doesExists === false).toBeTruthy();
       next();
-    });
+    }));
   });
 
 });

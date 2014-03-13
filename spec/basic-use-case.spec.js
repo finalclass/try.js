@@ -4,11 +4,11 @@ describe('basic-use-case', function () {
   it('can pass arguments sync', function () {
     new Try
     (function () {
-                //pass argument to the next function
-                return 'test';
-              })
-    (function (lastReturn) {
-      expect(lastReturn).toBe('test');
+      //pass argument to the next function
+      return 'test';
+    })
+    (function (result) {
+      expect(result[0]).toBe('test');
     });
   });
 
@@ -16,8 +16,8 @@ describe('basic-use-case', function () {
     Try(function () {
       return 'test';
     })
-    (function (lastReturn) {
-      expect(lastReturn).toBe('test');
+    (function (result) {
+      expect(result[0]).toBe('test');
     })
   });
 
@@ -29,8 +29,8 @@ describe('basic-use-case', function () {
         resume('works'); //pass argument to the next function
       });
     })
-    (function (works) {
-      expect(works).toBe('works');
+    (function (result) {
+      expect(result[0]).toBe('works');
       next();
     });
   });
