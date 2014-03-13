@@ -15,14 +15,14 @@ function Try(func) {
   return r(func);
 }
 
-Try.throwFirstArgument = function (callback) {
+Try.throwFirstArgument = function () {
   if (arguments[0]) {
     throw arguments[0];
   }
   return arguments[1];
 };
 
-Try.throwFirstArgumentInArray = function (callback) {
+Try.throwFirstArgumentInArray = function () {
   return Array.prototype.map.call(arguments, function (args) {
     if (args[0]) {
       throw args[0];
