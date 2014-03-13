@@ -1,7 +1,7 @@
 function Try(func) {
   var r = function (func) {
     if (func) {
-      r.stack.push(func);
+      r.thenStack.push(func);
     }
     return r.run();
   };
@@ -10,7 +10,9 @@ function Try(func) {
     r[i] = Try.fn[i];
   }
 
-  r.stack = [];
+  r.thenStack = [];
+  r.catchStack = [];
+  r.finallyStack = [];
   r.pauseCounter = 0;
   r.argsStack = [];
 
@@ -68,7 +70,7 @@ Try.fn = {
 
       if (this.pauseCounter > 0 && last !== undefined) {
         this.argsStack.push(last);
-      } else if (typeof last === 'function' && last.stack) {
+      } else if (typeof last === 'function' && last.thenStack) {
         Try.currentTry = this;
         last(Try.pause());
       } else {
@@ -83,20 +85,18 @@ Try.fn = {
   },
   callCatchCallbackIfPossible: function () {
     var err = this.error;
-    if (err && this.catchCallback) {
+    if (err && this.catchStack.length > 0) {
       this.error = null;
       this.argsStack = [[err]];
-      this.runFunc(this.catchCallback);
-      this.catchCallback = null;
+      this.runFunc(this.catchStack.shift());
     }
   },
   callFinallyCallbackIfPossible: function () {
-    if (this.finallyCallback) {
+    if (this.finallyStack.length > 0) {
       var err = this.error;
       this.error = null;
       this.argsStack = [[err]];
-      this.runFunc(this.finallyCallback);
-      this.finallyCallback = null;
+      this.runFunc(this.finallyStack.shift());
     }
   },
   asyncThrowError: function () {
@@ -108,21 +108,21 @@ Try.fn = {
     });
   },
   catch: function (callback) {
-    this.catchCallback = callback;
+    this.catchStack.push(callback);
     return this.run();
   },
   finally: function (callback) {
-    this.finallyCallback = callback;
+    this.finallyStack.push(callback);
     return this.run();
   },
   run: function () {
     this.callCatchCallbackIfPossible();
 
-    if (this.pauseCounter > 0 || (this.stack.length === 0 && !this.finallyCallback)) {
+    if (this.pauseCounter > 0 || (this.thenStack.length === 0 && this.finallyStack.length === 0)) {
       return this;
     }
     
-    var func = this.stack.shift();
+    var func = this.thenStack.shift();
     if (!func) {
       this.callFinallyCallbackIfPossible();
       return this.run();
