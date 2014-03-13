@@ -1,6 +1,8 @@
 function Try(func) {
   var r = function (func) {
-    r.stack.push(func);
+    if (func) {
+      r.stack.push(func);
+    }
     return r.run();
   };
   
