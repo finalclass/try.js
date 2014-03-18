@@ -21,13 +21,13 @@ describe('it-can-be-parallel.spec', function () {
       expect(concatenation === 'ab' || concatenation === 'ba').toBeTruthy();
     })
     .catch(function (e) {
-      console.log('ERROR', e, e.stack);
+      console.log('e', e);
       next(e);
     })
-    .finally((function () {
+    .finally(function () {
       fs.unlink('tmp.tmp', Try.pause());
       fs.unlink('tmp2.tmp', Try.pause());
-    }))
+    })
     (next);
   });
 
