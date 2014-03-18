@@ -75,4 +75,23 @@ describe('multiplie tries', function () {
     });
   });
 
+  it('can merge by return', function (next) {
+    
+    Try
+    (function () {
+      return 'a';
+    })
+    (function () {
+      return Try
+      (function () {
+        return 'b'
+      });
+    })
+    (function (result) {
+      expect(result).toBe('b');
+      next();
+    });
+
+  });
+
 });

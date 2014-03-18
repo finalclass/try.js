@@ -72,6 +72,7 @@ Try.fn = {
         this.argsStack.push(last);
       } else if (typeof last === 'function' && last.thenStack) {
         Try.currentTry = this;
+        this.argsStack = [];
         last(Try.pause());
       } else {
         this.argsStack = last ? [[last]] : [];
