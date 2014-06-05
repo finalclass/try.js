@@ -1,6 +1,6 @@
 {
   "name": "try",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Async try / catch",
   "main": "Try.js",
   "scripts": {
