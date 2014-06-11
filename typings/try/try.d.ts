@@ -1,5 +1,5 @@
 declare module 'try' {
-  
+
   function tryjs(callback?:{(...args):any}[]) : tryjs.ITry;
   function tryjs(callback?:(...args)=>any) : tryjs.ITry;
 
