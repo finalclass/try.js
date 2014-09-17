@@ -67,7 +67,7 @@ var Try = (function () {
         var last;
         Try.currentTry = this;
         if (typeof funcDescription.func === 'function') {
-          last = funcDescription.func.apply(this, this.argsStack[0]);
+          last = funcDescription.func.apply(this, this.argsStack[this.argsStack.length - 1]);
         } else {
           last = this.argsStack;
           for (var i = 0; i < funcDescription.func.length; i += 1) {

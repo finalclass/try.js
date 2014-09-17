@@ -4,7 +4,7 @@ declare module 'try' {
   function tryjs(callback?:(...args)=>any) : tryjs.ITry;
 
   module tryjs {
-    function pause(n?:number) : () => ITry;
+    function pause(n?:number) : (...args) => ITry;
     function throwFirstArgument(...args) : void;
     function throwFirstArgumentInArray(...args) : void[];
 
